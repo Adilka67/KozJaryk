@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Kozjaryk — улица вслух, на вашем языке</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========== Theme tokens (light / dark / high contrast) ========== */
+:root{
+  --bg:#fbfbfd;--panel:#f5f5f7;--ink:#1d1d1f;--muted:#5c5c61;--line:#d2d2d7;--navbg:rgba(251,251,253,.86);
+  --blue:#0071e3;--sun:#ffb800;--sky:#3cc6e8;--focus:#ffb800;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--panel:#1d1d1f;--ink:#f5f5f7;--muted:#a1a1a6;--line:#424245;--navbg:rgba(22,22,23,.86)}}
+:root[data-theme="dark"]{--bg:#000;--panel:#1d1d1f;--ink:#f5f5f7;--muted:#a1a1a6;--line:#424245;--navbg:rgba(22,22,23,.86)}
+:root[data-hc="1"][lang]{--bg:#000;--panel:#000;--ink:#fff;--muted:#fff;--line:#fff;--navbg:#000;--blue:#ffd400;--focus:#00e5ff}
+html{scroll-padding-top:calc(64px + env(safe-area-inset-top,0px));scroll-padding-bottom:120px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"SF Pro Display",Inter,"Segoe UI",Helvetica,Arial,sans-serif;font-size:calc(21px*var(--z,1));line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--navbg);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);z-index:60}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.w{max-width:980px;margin:0 auto}.c{text-align:center}
+.skip{position:absolute;left:-9999px;top:8px;background:var(--sun);color:#1d1d1f;padding:10px 16px;border-radius:10px;z-index:100;font-weight:700}
+.skip:focus{left:12px}
+
+/* ========== Header ========== */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--navbg);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+.top .in{max-width:980px;margin:0 auto;padding:0 22px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:21px;letter-spacing:-.01em;color:inherit;text-decoration:none}
+.logo i{width:17px;height:17px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--sky) 45%,#0b4560)}
+.langs{display:flex;gap:6px}
+.langs button{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font:inherit;font-size:16px;cursor:pointer}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* ========== Shared ========== */
+section{padding:clamp(64px,9vw,112px) 22px}
+h1,h2,h3{font-weight:700}
+h2{font-size:clamp(30px,5vw,52px);letter-spacing:-.03em;line-height:1.08;margin:0 0 28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 30px;border-radius:999px;border:0;font:inherit;font-size:20px;font-weight:600;text-decoration:none;cursor:pointer;background:var(--blue);color:#fff}
+.btn.alt{background:transparent;color:#f5f5f7;box-shadow:inset 0 0 0 2px #f5f5f7}
+:root[data-hc="1"][lang] .btn{color:#000}
+.btn:hover{filter:brightness(1.1)}
+.dk{background:#000;color:#f5f5f7}
+
+/* ========== Hero ========== */
+.hero{background:#000;color:#f5f5f7;overflow:hidden;padding-bottom:0}
+.hero h1{font-size:clamp(38px,8vw,88px);letter-spacing:-.04em;line-height:1.04;max-width:13ch;margin:0 auto 20px;background:linear-gradient(90deg,#fff 10%,#9be6f8 55%,#ffd36a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:clamp(19px,2.4vw,25px);color:#b3b3b8;max-width:34ch;margin:0 auto 32px}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.orbwrap{perspective:900px;height:clamp(280px,46vw,440px);margin-top:48px;position:relative}
+.orb{position:absolute;left:50%;top:6%;width:min(78vw,480px);aspect-ratio:1;margin-left:calc(min(78vw,480px)/-2);border-radius:50%;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s ease-out;
+  background:radial-gradient(circle at 36% 28%,#e6fbff 0,#3cc6e8 22%,#0b4560 55%,#02080c 80%);box-shadow:0 0 130px rgba(60,198,232,.45),inset 0 0 90px rgba(0,0,0,.6);animation:float 7s ease-in-out infinite}
+.orb::before{content:"";position:absolute;inset:6%;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 70%,rgba(255,255,255,.18) 85%,transparent 100%);animation:spin 9s linear infinite}
+.lens{position:absolute;left:50%;top:30%;width:16%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffeeb8,#ffb800 45%,#6b4300);box-shadow:0 0 50px rgba(255,184,0,.9)}
+.ring{position:absolute;left:50%;top:30%;width:16%;aspect-ratio:1;transform:translate(-50%,-50%);border:2px solid rgba(255,184,0,.55);border-radius:50%;animation:pulse 4.5s ease-out infinite}
+.ring:nth-of-type(2){animation-delay:1.5s}.ring:nth-of-type(3){animation-delay:3s}
+@keyframes pulse{to{width:92%;opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{50%{translate:0 -12px}}
+
+/* ========== Demo ========== */
+.demo{background:#0b0b0d;color:#f5f5f7}
+.stage{max-width:860px;margin:0 auto;background:#1d1d1f;border-radius:32px;overflow:hidden;text-align:left}
+.stage svg{display:block;width:100%;height:auto}
+.scene{filter:blur(10px);transition:filter .9s ease}
+.stage.clear .scene{filter:blur(0)}
+.tag{opacity:0;transition:opacity .4s}.tag.on{opacity:1}
+.hint{margin:0;padding:18px 24px 0;color:var(--sky);font-size:17px}
+.qs{display:flex;flex-wrap:wrap;gap:8px;padding:12px 24px 0}
+.qs button,.pill{background:#2c2c2e;color:#f5f5f7;border:0;border-radius:999px;padding:12px 20px;font:inherit;font-size:18px;cursor:pointer}
+.qs button:hover,.qs button[aria-pressed="true"]{background:var(--sun);color:#1d1d1f}
+.pill:hover{background:var(--blue)}
+.answer{margin:0;padding:18px 24px;min-height:112px;font-size:calc(24px*var(--z,1));line-height:1.35;font-weight:600}
+.bracelet{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:0 24px 8px}
+.cuff{display:flex;gap:6px;padding:6px;border-radius:999px;background:#000;border:1px solid #3a3a3c}
+.seg{min-width:84px;text-align:center;padding:8px 12px;border-radius:999px;color:#a1a1a6;font-size:15px;line-height:1.2}
+.seg b{display:block;font-size:20px}
+.seg.on{background:var(--sun);color:#1d1d1f;animation:buzz .12s linear 6}
+@keyframes buzz{0%{transform:translateX(-2px)}50%{transform:translateX(2px)}100%{transform:translateX(0)}}
+#bst{margin:0;color:var(--sun);font-size:17px}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 24px 0}
+#sp{margin:0;padding:10px 24px 0;color:var(--sun);font-size:18px;min-height:1em}
+.cap{margin:0;padding:14px 24px 22px;color:#a1a1a6;font-size:16px}
+
+/* ========== Product ========== */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:var(--panel);border-radius:28px;padding:clamp(28px,4vw,48px);min-height:280px}
+.card h3{font-size:clamp(28px,3.4vw,38px);letter-spacing:-.02em;margin:0 0 10px}
+.card p{margin:0;color:var(--muted);font-size:1.05em}
+.vis{height:80px;margin-bottom:30px}
+.pend{width:80px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--sky) 35%,#0b4560 80%);box-shadow:0 8px 30px rgba(60,198,232,.45)}
+.band{position:relative;width:160px;border-radius:40px;background:linear-gradient(145deg,#3a3a3c,#0c0c0e)}
+.band i{position:absolute;right:22px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--sun);box-shadow:0 0 14px var(--sun)}
+
+/* ========== Join ========== */
+form{display:grid;gap:16px;max-width:560px;margin:0 auto;text-align:left}
+.f{display:grid;gap:6px;font-weight:600;min-width:0}
+input[name],select{width:100%;min-width:0;font:inherit;font-size:1em;padding:14px 16px;border-radius:14px;border:1px solid #48484a;background:#1d1d1f;color:#fff;min-height:54px}
+input[aria-invalid="true"]{border-color:#ff6b61}
+.chk{display:flex;gap:12px;align-items:flex-start}
+.chk input{width:24px;height:24px;margin-top:4px;flex:none}
+.lk{background:none;border:0;padding:0;font:inherit;color:#2997ff;text-decoration:underline;cursor:pointer}
+.err{color:#ff6b61;min-height:1.5em;font-size:18px}
+.ok{max-width:560px;margin:24px auto 0;background:#f5f5f7;color:#1d1d1f;padding:22px;border-radius:20px;text-align:left}
+.ok:focus{outline:3px solid var(--focus)}
+footer{padding:32px 22px 140px;color:var(--muted);font-size:17px;border-top:1px solid var(--line)}
+
+/* ========== Privacy modal ========== */
+dialog{width:min(560px,calc(100vw - 32px));border:1px solid var(--line);border-radius:24px;padding:28px;background:var(--bg);color:var(--ink);font-size:calc(19px*var(--z,1))}
+dialog::backdrop{background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+dialog h2{font-size:28px;margin:0 0 14px}
+dialog p{color:var(--muted);margin:0 0 14px}
+dialog .btn{min-height:52px;margin-top:6px}
+
+/* ========== Accessibility bar ========== */
+.a11y{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;gap:8px;padding:8px;background:var(--navbg);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:999px;box-shadow:0 8px 30px rgba(0,0,0,.3);transition:opacity .3s ease,transform .3s ease,visibility .3s}
+.a11y.hide{opacity:0;visibility:hidden;transform:translate(-50%,16px)}
+.a11y button{min-height:52px;min-width:52px;padding:0 22px;border-radius:999px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);font:inherit;font-size:22px;font-weight:700;cursor:pointer}
+.a11y button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.hw{max-width:640px;margin:24px auto 0;text-align:left;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0}
+.hw summary{cursor:pointer;font-weight:600}
+.hw p{margin:10px 0 0;color:var(--muted)}
+.chk input{min-height:0;padding:0}
+textarea{font:inherit;font-size:1em;padding:14px 16px;border-radius:14px;border:1px solid #48484a;background:#1d1d1f;color:#fff;width:100%;min-width:0;resize:vertical}
+fieldset.of{border:0;padding:0;margin:0;display:grid;gap:10px}
+fieldset.of legend{font-weight:600;padding:0;margin-bottom:6px}
+.pform{max-width:600px}.pform .lk{color:var(--blue)}.pform .err{color:#c62d22}
+.exl{color:#a1a1a6;font-size:17px;margin-right:4px}.ex{padding-top:14px}
+.how .nd{fill:#2c2c2e;stroke:#48484a;stroke-width:2;transition:fill .4s,stroke .4s}
+.how .ln{fill:none;stroke:#48484a;stroke-width:3;stroke-dasharray:6 8}
+.how text{fill:#f5f5f7;font:700 34px Inter,Arial,sans-serif}
+.how .lensc{fill:var(--sun)}
+.how .wave{fill:none;stroke:#48484a;stroke-width:3;stroke-linecap:round}
+.how[data-s="0"] .n0,.how[data-s="1"] .n1,.how[data-s="2"] .n2,.how[data-s="3"] .n3{fill:#3a3a3c;stroke:var(--sun)}
+.how[data-s="0"] .l0,.how[data-s="1"] .l1,.how[data-s="2"] .l1{stroke:var(--sun);animation:dash 1s linear infinite}
+.how[data-s="2"] .wave{stroke:var(--sun)}
+.how[data-s="3"] .n3{animation:buzz .12s linear 12}
+@keyframes dash{to{stroke-dashoffset:-28}}
+.how svg{width:100%;max-width:860px;height:auto;display:block;margin:28px auto 0}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:860px;margin:20px auto 0}
+.steps4 button{background:#1d1d1f;color:#f5f5f7;border:2px solid transparent;border-radius:20px;padding:14px;font:inherit;font-size:17px;text-align:left;cursor:pointer;min-height:84px}
+.steps4 button[aria-pressed="true"]{border-color:var(--sun)}
+.hctl{margin-top:16px}
+.quotes{display:grid;gap:16px;max-width:760px;margin:0 auto}
+blockquote{margin:0;background:var(--panel);border-radius:24px;padding:28px;text-align:left}
+blockquote p{margin:0 0 10px;font-size:1.15em}
+cite{color:var(--muted);font-style:normal}
+.hh{margin:12px 0 0;font-size:1.05em}.hlist{margin:6px 0 0;padding-left:1.2em;color:var(--muted)}
+.hcol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+dialog ul{margin:0 0 14px;padding-left:1.2em;color:var(--muted)}dialog li{margin-bottom:8px}
+@media (max-width:760px){.steps4{grid-template-columns:1fr 1fr}.hcol{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.how .ln,.how .n3{animation:none}}
+.card.sm{min-height:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.card.wide{grid-column:1/-1;min-height:0}
+.price{max-width:640px;margin:28px auto 0;color:var(--muted);font-size:1.02em}
+.btn.ghost{background:transparent;color:#2997ff;box-shadow:none;min-height:48px;font-size:18px;padding:0 18px}
+:root[data-hc="1"][lang] .btn.alt,:root[data-hc="1"][lang] .btn.ghost{color:#fff}
+.gmsg{margin:12px 0 0;color:var(--sun);font-size:18px;min-height:1.2em}
+.vwrap{aspect-ratio:16/9;max-width:860px;margin:0 auto;border-radius:28px;overflow:hidden;background:#000}
+.vwrap iframe{width:100%;height:100%;border:0}
+#partners p{color:var(--muted);max-width:44ch;margin:0 auto 28px}
+@media (max-width:760px){.cards{grid-template-columns:1fr}.a11y{gap:6px;padding:6px}.a11y button{min-height:48px;min-width:48px;padding:0 16px;font-size:20px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.orb,.orb::before,.ring,.seg.on{animation:none}.ring{opacity:0}.scene,.tag,.a11y,.orb{transition:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#demo" data-i="a11y.skip"></a>
+
+<header class="top"><div class="in">
+  <a class="logo" href="#top"><i></i>Kozjaryk</a>
+  <div class="langs" id="langs" role="group" data-ia="a11y.lang">
+    <button type="button" data-l="kk" aria-pressed="false">ҚАЗ</button>
+    <button type="button" data-l="ru" aria-pressed="true">РУС</button>
+    <button type="button" data-l="en" aria-pressed="false">ENG</button>
+  </div>
+</div></header>
+
+<main id="top">
+
+<!-- 1. HERO -->
+<section class="hero c"><div class="w">
+  <h1 data-i="hero.h1"></h1>
+  <p class="sub" data-i="hero.sub"></p>
+  <div class="cta">
+    <a class="btn" href="#demo" data-i="hero.demo"></a>
+    <a class="btn alt" href="#join" data-i="hero.join"></a>
+    <button type="button" class="btn ghost" id="guide" data-i="hero.guide"></button>
+    <button type="button" class="btn ghost" id="helpb" data-i="hero.help" aria-haspopup="dialog"></button>
+  </div>
+  <p class="gmsg" id="gmsg" role="status" aria-live="polite"></p>
+  <div class="orbwrap" aria-hidden="true">
+    <div class="orb" id="orb"><span class="lens"></span><span class="ring"></span><span class="ring"></span><span class="ring"></span></div>
+  </div>
+</div></section>
+
+<!-- 2. DEMO -->
+<section class="demo c" id="demo"><div class="w">
+  <h2 data-i="demo.h2"></h2>
+  <div class="stage" id="stage">
+    <svg viewBox="0 0 400 250" role="img" data-ia="demo.svg" aria-describedby="svd">
+      <g class="scene">
+        <rect width="400" height="250" fill="#2a6f91"/>
+        <rect y="196" width="400" height="54" fill="#2f4a56"/>
+        <rect x="14" y="36" width="190" height="166" fill="#e7d3a3"/>
+        <rect x="24" y="50" width="170" height="32" rx="6" fill="#0b7a5a"/>
+        <text x="109" y="72" font-size="15" font-weight="700" text-anchor="middle" fill="#fff" font-family="Verdana,sans-serif">ДӘРІХАНА · АПТЕКА</text>
+        <rect x="36" y="110" width="48" height="92" fill="#7a4a2b"/>
+        <rect x="108" y="112" width="72" height="44" fill="#bfe6f7"/>
+        <rect x="222" y="104" width="164" height="84" rx="12" fill="#e0a21b"/>
+        <rect x="232" y="116" width="34" height="26" fill="#bfe6f7"/><rect x="274" y="116" width="34" height="26" fill="#bfe6f7"/><rect x="316" y="116" width="34" height="26" fill="#bfe6f7"/>
+        <rect x="232" y="84" width="48" height="18" rx="4" fill="#1d1d1f"/>
+        <text x="256" y="98" font-size="13" font-weight="700" text-anchor="middle" fill="#ffb800" font-family="Verdana,sans-serif">92</text>
+        <circle cx="258" cy="190" r="13" fill="#1d1d1f"/><circle cx="352" cy="190" r="13" fill="#1d1d1f"/>
+        <rect x="150" y="214" width="100" height="26" rx="4" fill="#7fb77e"/>
+        <text x="200" y="233" font-size="15" font-weight="700" text-anchor="middle" fill="#1d3b1c" font-family="Verdana,sans-serif">5000 ₸</text>
+      </g>
+      <g fill="none" stroke="#ffb800" stroke-width="3">
+        <rect class="tag" data-k="door" x="32" y="106" width="56" height="100"/>
+        <rect class="tag" data-k="sign" x="20" y="46" width="178" height="40"/>
+        <rect class="tag" data-k="bus" x="218" y="80" width="172" height="114"/>
+        <rect class="tag" data-k="note" x="146" y="210" width="108" height="34"/>
+      </g>
+    </svg>
+    <p class="sr" id="svd" data-i="demo.desc"></p>
+    <p class="hint" data-i="demo.hint"></p>
+    <div class="qs" id="qs" role="group" data-ia="demo.qlabel">
+      <button type="button" data-q="0" aria-pressed="false" data-i="demo.q1"></button>
+      <button type="button" data-q="1" aria-pressed="false" data-i="demo.q2"></button>
+      <button type="button" data-q="2" aria-pressed="false" data-i="demo.q3"></button>
+      <button type="button" data-q="3" aria-pressed="false" data-i="demo.q4"></button>
+      <button type="button" data-q="4" aria-pressed="false" data-i="demo.q5"></button>
+    </div>
+    <p class="answer" id="ans" aria-live="polite"><span id="anst"></span> <span class="sr" id="svs"></span></p>
+    <div class="bracelet">
+      <div class="cuff" id="cuff" aria-hidden="true">
+        <div class="seg" data-d="l"><b>◀</b><span data-i="demo.bl"></span></div>
+        <div class="seg" data-d="s"><b>■</b><span data-i="demo.bs"></span></div>
+        <div class="seg" data-d="r"><b>▶</b><span data-i="demo.br"></span></div>
+      </div>
+      <p id="bst" aria-live="polite"></p>
+    </div>
+    <div class="actions" role="group" data-ia="demo.str"><span class="exl" data-i="demo.str"></span><button type="button" class="pill" data-sg="0" aria-pressed="false" data-i="demo.s1"></button><button type="button" class="pill" data-sg="1" aria-pressed="true" data-i="demo.s2"></button><button type="button" class="pill" data-sg="2" aria-pressed="false" data-i="demo.s3"></button></div>
+    <div class="actions"><button type="button" class="pill" id="speak" data-i="demo.speak"></button></div>
+    <div class="actions ex" role="group" data-ia="demo.ex"><span class="exl" data-i="demo.ex"></span><button type="button" class="pill" data-ex="kk">Қазақша</button><button type="button" class="pill" data-ex="ru">Русский</button><button type="button" class="pill" data-ex="en">English</button></div>
+    <p id="sp" role="status" aria-live="polite"></p>
+    <p class="cap" data-i="demo.cap"></p>
+  </div>
+</div></section>
+
+<!-- Concept animation: how the pendant, AI, voice and bracelet work together -->
+<section class="dk c" id="how"><div class="w">
+  <h2 data-i="how.h2"></h2>
+  <div class="how" id="how-box" data-s="0">
+    <svg viewBox="0 0 800 200" aria-hidden="true">
+      <g class="nd n0"><circle cx="90" cy="100" r="46"/><circle class="lensc" cx="90" cy="100" r="14"/></g>
+      <path class="ln l0" d="M150 100H320"/>
+      <g class="nd n1"><rect x="320" y="60" width="160" height="80" rx="22"/><text x="400" y="113" text-anchor="middle">AI</text></g>
+      <path class="ln l1" d="M480 100C540 100 560 50 640 50"/>
+      <path class="ln l1" d="M480 100C540 100 560 150 640 150"/>
+      <g class="nd n2"><circle cx="690" cy="50" r="34"/><path class="wave" d="M734 32q14 18 0 36"/><path class="wave" d="M750 22q22 28 0 56"/></g>
+      <g class="nd n3"><rect x="640" y="124" width="120" height="56" rx="28"/><circle class="lensc" cx="730" cy="152" r="8"/></g>
+    </svg>
+    <div class="steps4" id="steps4" role="group" data-ia="how.steps">
+      <button type="button" data-st="0" aria-pressed="true" data-i="how.s1"></button>
+      <button type="button" data-st="1" aria-pressed="false" data-i="how.s2"></button>
+      <button type="button" data-st="2" aria-pressed="false" data-i="how.s3"></button>
+      <button type="button" data-st="3" aria-pressed="false" data-i="how.s4"></button>
+    </div>
+    <div class="hctl"><button type="button" class="pill" id="hplay"></button></div>
+    <p class="cap" data-i="how.note" style="padding:14px 0 0"></p>
+  </div>
+</div></section>
+
+<!-- Optional real demo video: set VIDEO_ID in the CONFIG block of the script to show this block -->
+<section class="dk c" id="vid" hidden><div class="w">
+  <h2 data-i="vid.h2"></h2>
+  <div class="vwrap"><iframe id="vf" data-ia="vid.title" loading="lazy" allowfullscreen></iframe></div>
+</div></section>
+
+<!-- 3. PRODUCT -->
+<section class="c"><div class="w">
+  <h2 data-i="prod.h2"></h2>
+  <div class="cards">
+    <div class="card"><div class="vis pend" aria-hidden="true"></div><h3 data-i="prod.p1"></h3><p data-i="prod.p1t"></p></div>
+    <div class="card"><div class="vis band" aria-hidden="true"><i></i></div><h3 data-i="prod.p2"></h3><p data-i="prod.p2t"></p></div>
+    <div class="card wide"><h3 data-i="prod.p3"></h3><p data-i="prod.p3t"></p></div>
+  </div>
+  <details class="hw"><summary data-i="prod.hw"></summary><p data-i="prod.hwt"></p></details>
+  <details class="hw"><summary data-i="off.sum"></summary>
+    <div class="hcol">
+      <div><h3 class="hh" data-i="off.l"></h3><ul class="hlist"><li data-i="off.l1"></li><li data-i="off.l2"></li><li data-i="off.l3"></li><li data-i="off.l4"></li></ul></div>
+      <div><h3 class="hh" data-i="off.c"></h3><ul class="hlist"><li data-i="off.c1"></li><li data-i="off.c2"></li><li data-i="off.c3"></li></ul></div>
+    </div>
+  </details>
+  <p class="price" data-i="prod.price"></p>
+</div></section>
+
+<!-- Safety and known limits -->
+<section class="c" id="safety" style="padding-top:0"><div class="w">
+  <h2 data-i="safe.h2"></h2>
+  <div class="cards">
+    <div class="card sm"><h3 data-i="safe.c1"></h3><p data-i="safe.c1t"></p></div>
+    <div class="card sm"><h3 data-i="safe.c2"></h3><p data-i="safe.c2t"></p></div>
+    <div class="card sm"><h3 data-i="safe.c3"></h3><p data-i="safe.c3t"></p></div>
+    <div class="card sm"><h3 data-i="safe.c4"></h3><p data-i="safe.c4t"></p></div>
+  </div>
+  <details class="hw"><summary data-i="safe.lim"></summary>
+    <ul class="hlist"><li data-i="safe.l1"></li><li data-i="safe.l2"></li><li data-i="safe.l3"></li><li data-i="safe.l4"></li></ul>
+  </details>
+</div></section>
+
+<!-- Partners -->
+<section class="c" id="partners" style="padding-top:0"><div class="w">
+  <h2 data-i="part.h2"></h2>
+  <p data-i="part.p"></p>
+  <a class="btn" href="#pdet" id="partnerbtn" data-i="part.btn"></a>
+  <details class="hw pform" id="pdet"><summary data-i="part.form"></summary>
+    <form id="pf" novalidate>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="f"><span data-i="part.org"></span><input name="org" autocomplete="organization" aria-describedby="perr"></label>
+      <label class="f"><span data-i="part.type"></span><select name="ot"><option data-i="part.t1"></option><option data-i="part.t2"></option><option data-i="part.t3"></option><option data-i="part.t4"></option><option data-i="part.t5"></option></select></label>
+      <fieldset class="of"><legend data-i="part.offer"></legend>
+        <label class="chk"><input type="checkbox" name="of" value="pilot"><span data-i="part.o1"></span></label>
+        <label class="chk"><input type="checkbox" name="of" value="expertise"><span data-i="part.o2"></span></label>
+        <label class="chk"><input type="checkbox" name="of" value="funding"><span data-i="part.o3"></span></label>
+      </fieldset>
+      <label class="f"><span data-i="join.email"></span><input name="pem" type="email" autocomplete="email" inputmode="email" aria-describedby="perr"></label>
+      <label class="f"><span data-i="part.msg"></span><textarea name="pm" rows="3"></textarea></label>
+      <div class="chk"><input type="checkbox" id="pag" name="pag" aria-describedby="perr"><div><label for="pag" data-i="join.consent"></label> <button type="button" class="lk" id="polb2" data-i="join.pol" aria-haspopup="dialog"></button></div></div>
+      <div class="err" id="perr" role="alert"></div>
+      <button class="btn" type="submit" data-i="part.submit"></button>
+    </form>
+    <p class="ok" id="pok" hidden role="status" tabindex="-1"></p>
+  </details>
+</div></section>
+
+<!-- Testing stories: shown only when STORIES in CONFIG is filled with real quotes -->
+<section class="c" id="stories" hidden style="padding-top:0"><div class="w">
+  <h2 data-i="st.h2"></h2>
+  <div class="quotes" id="quotes"></div>
+</div></section>
+
+<!-- 4. WAITLIST -->
+<section class="dk c" id="join"><div class="w">
+  <h2 data-i="join.h2"></h2>
+  <form id="wl" novalidate>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="f"><span data-i="join.name"></span><input name="nm" autocomplete="name" aria-describedby="err"></label>
+    <label class="f"><span data-i="join.email"></span><input name="em" type="email" autocomplete="email" inputmode="email" aria-describedby="err"></label>
+    <label class="f"><span data-i="join.role"></span>
+      <select name="rl"><option data-i="join.r1"></option><option data-i="join.r2"></option><option data-i="join.r3"></option><option data-i="join.r4"></option></select></label>
+    <div class="chk">
+      <input type="checkbox" id="ag" name="ag" aria-describedby="err">
+      <div><label for="ag" data-i="join.consent"></label> <button type="button" class="lk" id="polb" data-i="join.pol" aria-haspopup="dialog"></button></div>
+    </div>
+    <div class="err" id="err" role="alert"></div>
+    <button class="btn" type="submit" data-i="join.submit"></button>
+  </form>
+  <p class="ok" id="okb" hidden role="status" tabindex="-1"></p>
+</div></section>
+
+</main>
+
+<footer><div class="w c" data-i="foot"></div></footer>
+
+<!-- Privacy modal -->
+<dialog id="pol" aria-labelledby="pt">
+  <h2 id="pt" data-i="pol.title"></h2>
+  <p id="polop" data-i="pol.op"></p>
+  <p id="polp1" data-i="pol.p1"></p>
+  <p data-i="pol.p2"></p>
+  <button type="button" class="btn" id="polx" data-i="pol.close"></button>
+</dialog>
+
+<!-- Site help modal -->
+<dialog id="help" aria-labelledby="ht">
+  <h2 id="ht" data-i="help.title"></h2>
+  <ul><li data-i="help.k"></li><li data-i="help.v"></li><li data-i="help.t"></li><li data-i="help.n"></li><li data-i="help.g"></li></ul>
+  <button type="button" class="btn" id="helpx" data-i="pol.close"></button>
+</dialog>
+
+<!-- Accessibility bar -->
+<div class="a11y" id="a11y" role="group" data-ia="a11y.bar">
+  <button type="button" id="zm">A</button>
+  <button type="button" id="hc" aria-pressed="false" data-i="a11y.contrast"></button>
+</div>
+
+<script type="application/json" id="i18n">
+{
+ "ru": {
+  "title": "Kozjaryk — улица вслух, на вашем языке",
+  "a11y": {
+   "skip": "Перейти к демо",
+   "lang": "Язык",
+   "bar": "Доступность",
+   "size": "Размер текста",
+   "contrast": "Контраст"
+  },
+  "hero": {
+   "h1": "Улица, прочитанная вслух. На вашем языке.",
+   "sub": "Kozjaryk рассказывает людям со слабым зрением, что вокруг, на казахском, русском и английском.",
+   "demo": "Попробовать демо",
+   "join": "Записаться",
+   "guide": "Послушать о сайте",
+   "help": "Как пользоваться сайтом"
+  },
+  "demo": {
+   "h2": "На схеме выделена вывеска аптеки.",
+   "svg": "Размытая уличная сцена: аптека, автобус и купюра",
+   "hint": "Так видит улицу человек со слабым зрением. Задайте вопрос:",
+   "qlabel": "Вопросы",
+   "q1": "Что впереди?",
+   "q2": "Прочитай вывеску",
+   "q3": "Какой автобус?",
+   "q4": "Сколько денег?",
+   "a1": "Впереди аптека. Дверь слева, три шага. Справа остановка, подъезжает автобус.",
+   "a2": "На вывеске: «Дәріхана — Аптека».",
+   "a3": "Подъезжает автобус номер 92. Он остановится справа.",
+   "a4": "В руке купюра: пять тысяч тенге.",
+   "idle": "Выберите вопрос.",
+   "bl": "Влево",
+   "bs": "Стоп",
+   "br": "Вправо",
+   "bw": "Браслет ждёт вопроса",
+   "bst": "Браслет",
+   "speak": "Озвучить ответ",
+   "ask": "Сначала выберите вопрос.",
+   "nosp": "Озвучка недоступна в этом браузере.",
+   "nov": "На этом устройстве нет голоса для выбранного языка. Ответ можно прочитать на экране.",
+   "err": "Не удалось озвучить ответ. Прочитайте его на экране.",
+   "cap": "Иллюстрация: так может звучать ответ Kozjaryk.",
+   "nov2": "На устройстве нет голоса для этого языка. Читаю на русском.",
+   "desc": "Схема улицы: слева аптека с зелёной вывеской и коричневой дверью, справа жёлтый автобус с номером 92, внизу купюра в пять тысяч тенге. Сначала изображение размыто, после вопроса нужный предмет становится чётким и обводится жёлтой рамкой.",
+   "h1": "На схеме выделены дверь аптеки слева и автобус справа.",
+   "h3": "На схеме выделен автобус номер 92 справа.",
+   "h4": "На схеме выделена купюра внизу.",
+   "ex": "Послушать пример ответа",
+   "q5": "Что под ногами?",
+   "a5": "Не уверен: изображение слишком размытое. Остановитесь и проверьте путь тростью.",
+   "h5": "На схеме ничего не выделено: ответ осторожный.",
+   "str": "Сила вибрации",
+   "s1": "Слабая",
+   "s2": "Средняя",
+   "s3": "Сильная"
+  },
+  "prod": {
+   "h2": "Кулон и браслет",
+   "p1": "Кулон",
+   "p1t": "Камера на груди, руки свободны, ответ в ухо.",
+   "p2": "Браслет",
+   "p2t": "Вибрация: влево, вправо, стоп.",
+   "p3": "Приватно и быстро",
+   "p3t": "Камера включается только по вашему запросу. Базовые функции мы планируем делать на самом устройстве, без задержки облака.",
+   "price": "Цена пока не определена. Цель: сделать Kozjaryk доступным, в том числе через программы реабилитации и фонды.",
+   "hw": "Техническая основа (цели)",
+   "hwt": "Чип пока не выбран: рассматриваем компактные процессоры с аппаратным ускорением нейросетей и низким энергопотреблением. Цели прототипа: лёгкий корпус, без перегрева, работа в течение дня, быстрый ответ на устройстве. Тяжёлые запросы пойдут в облако."
+  },
+  "join": {
+   "h2": "Список ожидания",
+   "name": "Имя",
+   "email": "Эл. почта",
+   "role": "Кто вы?",
+   "r1": "Человек со слабым зрением",
+   "r2": "Родственник",
+   "r3": "Специалист",
+   "consent": "Согласен на обработку моих персональных данных в соответствии с Законом РК «О персональных данных и их защите».",
+   "pol": "Политика конфиденциальности",
+   "submit": "Записаться",
+   "en": "Введите имя (минимум 2 буквы).",
+   "ee": "Введите правильный адрес почты.",
+   "ea": "Нужно ваше согласие.",
+   "ok": "Спасибо, {n}! Вы №{c} в списке. Данные хранятся только в этом браузере.",
+   "r4": "Организация-партнёр",
+   "neterr": "Не удалось отправить. Данные сохранены в этом браузере, попробуйте позже.",
+   "ok2": "Спасибо, {n}! Вы в списке. Мы свяжемся с вами."
+  },
+  "pol": {
+   "title": "Политика конфиденциальности",
+   "p1": "Мы собираем имя, почту и роль, чтобы сообщить о пилоте и новостях проекта, и не передаём их третьим лицам без вашего согласия. Сейчас форма демонстрационная: данные остаются только в вашем браузере. После запуска сервера данные будут обрабатываться в соответствии с Законом РК «О персональных данных и их защите». Вы можете запросить доступ, исправление или удаление данных и отозвать согласие: [email для обращений].",
+   "p2": "В будущем продукте камера и микрофон будут включаться только по запросу пользователя. Мы планируем обработку данных на самом устройстве и сквозное шифрование при передаче в облако.",
+   "close": "Закрыть",
+   "op": "Оператор данных: {op}.",
+   "p1s": "Мы собираем имя, почту и роль (для организаций: название и тип), чтобы сообщить о пилоте и новостях проекта, и не передаём их третьим лицам без вашего согласия. Данные передаются на сервер оператора и обрабатываются в соответствии с Законом РК «О персональных данных и их защите». Вы можете запросить доступ, исправление или удаление данных и отозвать согласие: [email для обращений]."
+  },
+  "foot": "Концепт проекта Kozjaryk.",
+  "guide": {
+   "text": "Добро пожаловать в Kozjaryk. Это носимый помощник для людей со слабым зрением. Сайт работает с экранными дикторами: VoiceOver, TalkBack и NVDA. Внизу экрана кнопки размера текста и контраста. Чтобы попробовать демо, перейдите к разделу «Попробуйте прямо сейчас»."
+  },
+  "part": {
+   "h2": "Ищем партнёров",
+   "p": "Общества слепых и слабовидящих, клиники, фонды: мы открыты к пилотам.",
+   "btn": "Стать партнёром",
+   "form": "Предложить сотрудничество",
+   "org": "Организация",
+   "type": "Тип организации",
+   "t1": "Общество слепых и слабовидящих",
+   "t2": "Клиника",
+   "t3": "Фонд",
+   "t4": "Университет или лаборатория",
+   "t5": "Другое",
+   "offer": "Что вы можете предложить?",
+   "o1": "Площадку для пилота",
+   "o2": "Экспертизу",
+   "o3": "Финансирование",
+   "msg": "Комментарий (необязательно)",
+   "submit": "Отправить предложение",
+   "eo": "Укажите название организации.",
+   "ok": "Спасибо, {n}! Мы изучим предложение и свяжемся с вами."
+  },
+  "vid": {
+   "h2": "Видео",
+   "title": "Видео-демо Kozjaryk"
+  },
+  "how": {
+   "h2": "Как это работает",
+   "note": "Концептуальная анимация, не запись реального устройства.",
+   "pause": "Пауза",
+   "play": "Играть",
+   "steps": "Шаги",
+   "s1": "Вы спрашиваете, кулон смотрит",
+   "s2": "ИИ понимает сцену",
+   "s3": "Голос отвечает в ухо",
+   "s4": "Браслет подсказывает направление"
+  },
+  "help": {
+   "title": "Как пользоваться сайтом",
+   "k": "Клавиатура: Tab и Shift+Tab переходят между элементами, Enter или пробел нажимают кнопки, Esc закрывает окна.",
+   "v": "VoiceOver (iPhone): проводите пальцем вправо и влево, двойное касание нажимает кнопку.",
+   "t": "TalkBack (Android): так же, проводите вправо и влево, двойное касание нажимает.",
+   "n": "NVDA и JAWS (Windows): клавиша H переходит по заголовкам, Tab по кнопкам и полям.",
+   "g": "Или нажмите «Послушать о сайте»: голос расскажет, как здесь всё устроено."
+  },
+  "off": {
+   "sum": "Что работает без интернета (план)",
+   "l": "На самом устройстве",
+   "l1": "Голосовые команды",
+   "l2": "Номинал купюр в тенге",
+   "l3": "Препятствия и направление",
+   "l4": "Номер автобуса",
+   "c": "Нужен интернет",
+   "c1": "Подробное описание сцены",
+   "c2": "Чтение длинных текстов и инструкций к лекарствам",
+   "c3": "Время прибытия автобуса: планируем подключить данные городского транспорта"
+  },
+  "st": {
+   "h2": "Истории тестирования"
+  },
+  "safe": {
+   "h2": "Безопасность прежде всего",
+   "c1": "Не замена трости",
+   "c1t": "Kozjaryk помогает, но не заменяет трость, собаку-проводника или сопровождающего. На дороге и в опасных местах полагайтесь на привычные способы.",
+   "c2": "ИИ признаёт сомнения",
+   "c2t": "Мы проектируем систему так: если уверенность низкая, она так и скажет, а не будет гадать. Опасности важнее описаний.",
+   "c3": "Сигнал не потеряется",
+   "c3t": "Планируем: сила вибрации настраивается, у каждого сигнала свой рисунок, а важное дублируется голосом.",
+   "c4": "Приватность по умолчанию",
+   "c4t": "Камера включается только по вашей команде, на корпусе будет световой индикатор. Мы планируем не сохранять кадры с лицами и документами.",
+   "lim": "Известные ограничения",
+   "l1": "Казахский голос: качество проверим с носителями языка, пока возможны ошибки.",
+   "l2": "Городская среда: смешанные вывески, потёртые купюры, гололёд. Нужны тесты на реальных улицах.",
+   "l3": "Батарея и вес: цель работать целый день без нагрева, чип и ёмкость ещё не выбраны.",
+   "l4": "Связь: срочные подсказки планируем делать на устройстве, чтобы они не зависели от сети."
+  }
+ },
+ "kk": {
+  "title": "Kozjaryk — көше дауыстап оқылады, өз тіліңізде",
+  "a11y": {
+   "skip": "Демоға өту",
+   "lang": "Тіл",
+   "bar": "Қолжетімділік",
+   "size": "Мәтін өлшемі",
+   "contrast": "Контраст"
+  },
+  "hero": {
+   "h1": "Көше дауыстап оқылады. Өз тіліңізде.",
+   "sub": "Kozjaryk нашар көретін адамдарға айналада не бар екенін қазақша, орысша және ағылшынша айтады.",
+   "demo": "Демоны көру",
+   "join": "Жазылу",
+   "guide": "Сайт туралы тыңдау",
+   "help": "Сайтты қалай қолдану керек"
+  },
+  "demo": {
+   "h2": "Сұлбада дәріхананың маңдайшасы белгіленді.",
+   "svg": "Бұлдыр көше көрінісі: дәріхана, автобус және купюра",
+   "hint": "Нашар көретін адам көшені осылай көреді. Сұрақ қойыңыз:",
+   "qlabel": "Сұрақтар",
+   "q1": "Алдымда не бар?",
+   "q2": "Маңдайшаны оқы",
+   "q3": "Қай автобус?",
+   "q4": "Қанша ақша?",
+   "a1": "Алдыңызда дәріхана. Есік сол жақта, үш қадам. Оң жақта аялдама, автобус келе жатыр.",
+   "a2": "Маңдайшада: «Дәріхана — Аптека».",
+   "a3": "92 нөмірлі автобус келе жатыр. Ол оң жақта тоқтайды.",
+   "a4": "Қолыңызда купюра: бес мың теңге.",
+   "idle": "Сұрақты таңдаңыз.",
+   "bl": "Солға",
+   "bs": "Тоқта",
+   "br": "Оңға",
+   "bw": "Білезік сұрақты күтуде",
+   "bst": "Білезік",
+   "speak": "Жауапты дыбыстау",
+   "ask": "Алдымен сұрақты таңдаңыз.",
+   "nosp": "Бұл браузерде дыбыстау жоқ.",
+   "nov": "Бұл құрылғыда таңдалған тілге дауыс жоқ. Жауапты экраннан оқи аласыз.",
+   "err": "Жауапты дыбыстау мүмкін болмады. Экраннан оқыңыз.",
+   "cap": "Суреттеме: Kozjaryk жауабы осылай естілуі мүмкін.",
+   "nov2": "Құрылғыда бұл тілге дауыс жоқ. Орысша оқимын.",
+   "desc": "Көше сұлбасы: сол жақта жасыл маңдайшасы мен қоңыр есігі бар дәріхана, оң жақта 92 нөмірлі сары автобус, төменде бес мың теңгелік купюра. Алдымен сурет бұлдыр, сұрақтан кейін қажет зат анық болып, сары жақтаумен белгіленеді.",
+   "h1": "Сұлбада сол жақтағы дәріхана есігі мен оң жақтағы автобус белгіленді.",
+   "h3": "Сұлбада оң жақтағы 92 нөмірлі автобус белгіленді.",
+   "h4": "Сұлбада төмендегі купюра белгіленді.",
+   "ex": "Жауап үлгісін тыңдау",
+   "q5": "Аяғымның астында не бар?",
+   "a5": "Сенімді емеспін: сурет тым бұлдыр. Тоқтап, жолды таяқпен тексеріңіз.",
+   "h5": "Сұлбада ештеңе белгіленбеді: жауап сақ.",
+   "str": "Діріл күші",
+   "s1": "Әлсіз",
+   "s2": "Орташа",
+   "s3": "Күшті"
+  },
+  "prod": {
+   "h2": "Кулон және білезік",
+   "p1": "Кулон",
+   "p1t": "Кеудедегі камера, қолыңыз бос, жауап құлағыңызда.",
+   "p2": "Білезік",
+   "p2t": "Діріл: солға, оңға, тоқта.",
+   "p3": "Жеке және жылдам",
+   "p3t": "Камера тек сіздің сұрауыңыз бойынша қосылады. Негізгі функцияларды құрылғының өзінде, бұлттың кідірісінсіз жасауды жоспарлаймыз.",
+   "price": "Баға әлі анықталған жоқ. Мақсат: Kozjaryk-ті қолжетімді ету, соның ішінде оңалту бағдарламалары мен қорлар арқылы.",
+   "hw": "Техникалық негіз (мақсаттар)",
+   "hwt": "Чип әлі таңдалған жоқ: нейрожелілерге арналған аппараттық үдеткіші бар, энергия аз тұтынатын шағын процессорларды қарастырамыз. Прототиптің мақсаттары: жеңіл корпус, қызып кетпеу, күні бойы жұмыс, құрылғыда жылдам жауап. Ауыр сұраулар бұлтқа кетеді."
+  },
+  "join": {
+   "h2": "Күту тізімі",
+   "name": "Аты",
+   "email": "Эл. пошта",
+   "role": "Сіз кімсіз?",
+   "r1": "Нашар көретін адам",
+   "r2": "Туыс",
+   "r3": "Маман",
+   "consent": "«Дербес деректер және оларды қорғау туралы» ҚР Заңына сәйкес жеке деректерімді өңдеуге келісемін.",
+   "pol": "Құпиялылық саясаты",
+   "submit": "Жазылу",
+   "en": "Атыңызды енгізіңіз (кемінде 2 әріп).",
+   "ee": "Дұрыс пошта мекенжайын енгізіңіз.",
+   "ea": "Келісіміңіз қажет.",
+   "ok": "Рахмет, {n}! Сіз тізімде №{c}. Деректер тек осы браузерде сақталады.",
+   "r4": "Серіктес ұйым",
+   "neterr": "Жіберу мүмкін болмады. Деректер осы браузерде сақталды, кейінірек қайталаңыз.",
+   "ok2": "Рахмет, {n}! Сіз тізімдесіз. Біз сізбен байланысамыз."
+  },
+  "pol": {
+   "title": "Құпиялылық саясаты",
+   "p1": "Біз пилот пен жоба жаңалықтары туралы хабарлау үшін аты, пошта және рөлді жинаймыз және сіздің келісіміңізсіз үшінші тұлғаларға бермейміз. Қазір форма демонстрациялық: деректер тек браузеріңізде қалады. Сервер іске қосылғаннан кейін деректер «Дербес деректер және оларды қорғау туралы» ҚР Заңына сәйкес өңделеді. Деректерге қол жеткізуді, түзетуді, жоюды сұрауға немесе келісімді қайтарып алуға болады: [байланыс email].",
+   "p2": "Болашақ өнімде камера мен микрофон тек пайдаланушының сұрауы бойынша қосылады. Деректерді құрылғының өзінде өңдеуді және бұлтқа жібергенде түпкілікті шифрлауды жоспарлаймыз.",
+   "close": "Жабу",
+   "op": "Деректер операторы: {op}.",
+   "p1s": "Біз пилот пен жоба жаңалықтары туралы хабарлау үшін аты, пошта және рөлді (ұйымдар үшін: атауы мен түрі) жинаймыз және сіздің келісіміңізсіз үшінші тұлғаларға бермейміз. Деректер оператор серверіне жіберіледі және «Дербес деректер және оларды қорғау туралы» ҚР Заңына сәйкес өңделеді. Деректерге қол жеткізуді, түзетуді, жоюды сұрауға немесе келісімді қайтарып алуға болады: [байланыс email]."
+  },
+  "foot": "Kozjaryk жобасының тұжырымдамасы.",
+  "guide": {
+   "text": "Kozjaryk-ке қош келдіңіз. Бұл нашар көретін адамдарға арналған киілетін көмекші. Сайт VoiceOver, TalkBack және NVDA экрандық оқу бағдарламаларымен жұмыс істейді. Экранның төменгі жағында мәтін өлшемі мен контраст түймелері бар. Демоны көру үшін «Қазір сынап көріңіз» бөліміне өтіңіз."
+  },
+  "part": {
+   "h2": "Серіктестер іздейміз",
+   "p": "Нашар көретіндер қоғамдары, клиникалар, қорлар: пилоттарға ашықпыз.",
+   "btn": "Серіктес болу",
+   "form": "Ынтымақтастық ұсыну",
+   "org": "Ұйым",
+   "type": "Ұйым түрі",
+   "t1": "Нашар көретіндер қоғамы",
+   "t2": "Клиника",
+   "t3": "Қор",
+   "t4": "Университет немесе зертхана",
+   "t5": "Басқа",
+   "offer": "Не ұсына аласыз?",
+   "o1": "Пилот алаңын",
+   "o2": "Сараптаманы",
+   "o3": "Қаржыландыруды",
+   "msg": "Пікір (міндетті емес)",
+   "submit": "Ұсынысты жіберу",
+   "eo": "Ұйым атауын көрсетіңіз.",
+   "ok": "Рахмет, {n}! Ұсынысты қарап, сізбен байланысамыз."
+  },
+  "vid": {
+   "h2": "Бейне",
+   "title": "Kozjaryk демо-бейнесі"
+  },
+  "how": {
+   "h2": "Бұл қалай жұмыс істейді",
+   "note": "Тұжырымдамалық анимация, нақты құрылғының жазбасы емес.",
+   "pause": "Үзіліс",
+   "play": "Ойнату",
+   "steps": "Қадамдар",
+   "s1": "Сіз сұрайсыз, кулон қарайды",
+   "s2": "ЖИ көріністі түсінеді",
+   "s3": "Дауыс құлаққа жауап береді",
+   "s4": "Білезік бағытты көрсетеді"
+  },
+  "help": {
+   "title": "Сайтты қалай қолдану керек",
+   "k": "Пернетақта: Tab және Shift+Tab элементтер арасында ауысады, Enter немесе бос орын түймені басады, Esc терезені жабады.",
+   "v": "VoiceOver (iPhone): саусағыңызды оңға және солға жүргізіңіз, қос түрту түймені басады.",
+   "t": "TalkBack (Android): дәл солай, оңға және солға жүргізіңіз, қос түрту басады.",
+   "n": "NVDA және JAWS (Windows): H пернесі тақырыптар арасында, Tab түймелер мен өрістер арасында жүреді.",
+   "g": "Немесе «Сайт туралы тыңдау» түймесін басыңыз: дауыс мұнда бәрі қалай жұмыс істейтінін айтады."
+  },
+  "off": {
+   "sum": "Интернетсіз не істейді (жоспар)",
+   "l": "Құрылғының өзінде",
+   "l1": "Дауыстық командалар",
+   "l2": "Теңге купюраларының номиналы",
+   "l3": "Кедергілер мен бағыт",
+   "l4": "Автобус нөмірі",
+   "c": "Интернет қажет",
+   "c1": "Көріністің толық сипаттамасы",
+   "c2": "Ұзын мәтіндер мен дәрі нұсқаулықтарын оқу",
+   "c3": "Автобустың келу уақыты: қала көлігінің деректерін қосуды жоспарлаймыз"
+  },
+  "st": {
+   "h2": "Тестілеу тарихтары"
+  },
+  "safe": {
+   "h2": "Қауіпсіздік бәрінен бұрын",
+   "c1": "Таяқтың орнын баспайды",
+   "c1t": "Kozjaryk көмектеседі, бірақ таяқты, жол көрсетуші итті немесе серікті алмастырмайды. Жолда және қауіпті жерлерде әдеттегі әдістерге сүйеніңіз.",
+   "c2": "ЖИ күмәнді мойындайды",
+   "c2t": "Жүйені былай жобалаймыз: сенімділік төмен болса, болжамай, солай деп айтады. Қауіп сипаттамадан маңыздырақ.",
+   "c3": "Сигнал жоғалмайды",
+   "c3t": "Жоспар: діріл күші бапталады, әр сигналдың өз ырғағы бар, маңыздысы дауыспен қайталанады.",
+   "c4": "Әдепкі құпиялылық",
+   "c4t": "Камера тек сіздің командаңыз бойынша қосылады, корпуста жарық индикаторы болады. Адамдардың беттері мен құжаттары бар кадрларды сақтамауды жоспарлаймыз.",
+   "lim": "Белгілі шектеулер",
+   "l1": "Қазақ дауысы: сапасын тіл иелерімен тексереміз, әзірге қателер болуы мүмкін.",
+   "l2": "Қала ортасы: аралас маңдайшалар, тозған купюралар, көктайғақ. Нақты көшелерде сынақ қажет.",
+   "l3": "Батарея және салмақ: мақсат — қызбай күні бойы жұмыс істеу, чип пен сыйымдылық әлі таңдалған жоқ.",
+   "l4": "Байланыс: шұғыл кеңестерді желіге тәуелсіз болуы үшін құрылғыда жасауды жоспарлаймыз."
+  }
+ },
+ "en": {
+  "title": "Kozjaryk — the street, read aloud, in your language",
+  "a11y": {
+   "skip": "Skip to the demo",
+   "lang": "Language",
+   "bar": "Accessibility",
+   "size": "Text size",
+   "contrast": "Contrast"
+  },
+  "hero": {
+   "h1": "The street, read aloud. In your language.",
+   "sub": "Kozjaryk tells people with low vision what is around them, in Kazakh, Russian and English.",
+   "demo": "Try the demo",
+   "join": "Join",
+   "guide": "Listen to the site guide",
+   "help": "How to use this site"
+  },
+  "demo": {
+   "h2": "The diagram highlights the pharmacy sign.",
+   "svg": "Blurred street scene: a pharmacy, a bus and a banknote",
+   "hint": "This is how a person with low vision sees the street. Ask a question:",
+   "qlabel": "Questions",
+   "q1": "What is ahead?",
+   "q2": "Read the sign",
+   "q3": "Which bus?",
+   "q4": "How much money?",
+   "a1": "A pharmacy is ahead. The door is on your left, three steps away. A bus stop is on your right and a bus is arriving.",
+   "a2": "The sign reads “Pharmacy” in Kazakh and Russian.",
+   "a3": "Bus number 92 is arriving. It will stop on your right.",
+   "a4": "You are holding a banknote: five thousand tenge.",
+   "idle": "Pick a question.",
+   "bl": "Left",
+   "bs": "Stop",
+   "br": "Right",
+   "bw": "The bracelet is waiting for a question",
+   "bst": "Bracelet",
+   "speak": "Read answer aloud",
+   "ask": "Pick a question first.",
+   "nosp": "Speech is not available in this browser.",
+   "nov": "This device has no voice for the selected language. You can read the answer on screen.",
+   "err": "Could not read the answer aloud. Please read it on screen.",
+   "cap": "Illustration: how a Kozjaryk answer could sound.",
+   "nov2": "No voice for this language on this device. Reading in Russian.",
+   "desc": "Street diagram: on the left a pharmacy with a green sign and a brown door, on the right a yellow bus numbered 92, and below a five-thousand-tenge banknote. The image starts blurred; after a question the relevant object becomes sharp and is outlined in yellow.",
+   "h1": "The diagram highlights the pharmacy door on the left and the bus on the right.",
+   "h3": "The diagram highlights bus number 92 on the right.",
+   "h4": "The diagram highlights the banknote at the bottom.",
+   "ex": "Listen to a sample answer",
+   "q5": "What is under my feet?",
+   "a5": "I am not sure: the image is too blurry. Stop and check the path with your cane.",
+   "h5": "Nothing is highlighted on the diagram: the answer is cautious.",
+   "str": "Vibration strength",
+   "s1": "Light",
+   "s2": "Medium",
+   "s3": "Strong"
+  },
+  "prod": {
+   "h2": "Pendant and bracelet",
+   "p1": "Pendant",
+   "p1t": "Camera on your chest, hands free, the answer in your ear.",
+   "p2": "Bracelet",
+   "p2t": "Vibration: left, right, stop.",
+   "p3": "Private and fast",
+   "p3t": "The camera turns on only when you ask. We plan to run basic features on the device itself, with no cloud delay.",
+   "price": "The price is not set yet. Our goal is to make Kozjaryk affordable, including through rehabilitation programs and foundations.",
+   "hw": "Technical basis (goals)",
+   "hwt": "The chip is not chosen yet: we are considering compact, low-power processors with hardware acceleration for neural networks. Prototype goals: a light enclosure, no overheating, all-day battery life and fast on-device answers. Heavy requests will go to the cloud."
+  },
+  "join": {
+   "h2": "Waitlist",
+   "name": "Name",
+   "email": "Email",
+   "role": "Who are you?",
+   "r1": "Person with low vision",
+   "r2": "Relative",
+   "r3": "Specialist",
+   "consent": "I consent to the processing of my personal data in accordance with the Law of the Republic of Kazakhstan “On Personal Data and Their Protection”.",
+   "pol": "Privacy policy",
+   "submit": "Join",
+   "en": "Enter your name (at least 2 letters).",
+   "ee": "Enter a valid email address.",
+   "ea": "Your consent is required.",
+   "ok": "Thank you, {n}! You are #{c} on the list. Data stays only in this browser.",
+   "r4": "Partner organization",
+   "neterr": "Could not send. Your data is saved in this browser; please try again later.",
+   "ok2": "Thank you, {n}! You are on the list. We will contact you."
+  },
+  "pol": {
+   "title": "Privacy policy",
+   "p1": "We collect your name, email and role to tell you about the pilot and project news, and do not share them with third parties without your consent. The form is currently a demo: data stays only in your browser. Once a server is launched, data will be processed in accordance with the Law of the Republic of Kazakhstan “On Personal Data and Their Protection”. You can request access, correction or deletion, or withdraw consent: [contact email].",
+   "p2": "In the future product the camera and microphone will only turn on at the user’s request. We plan on-device processing and end-to-end encryption when data goes to the cloud.",
+   "close": "Close",
+   "op": "Data controller: {op}.",
+   "p1s": "We collect your name, email and role (for organizations: name and type) to tell you about the pilot and project news, and do not share them with third parties without your consent. Data is sent to the operator’s server and processed in accordance with the Law of the Republic of Kazakhstan “On Personal Data and Their Protection”. You can request access, correction or deletion, or withdraw consent: [contact email]."
+  },
+  "foot": "Kozjaryk project concept.",
+  "guide": {
+   "text": "Welcome to Kozjaryk, a wearable assistant for people with low vision. This site works with screen readers: VoiceOver, TalkBack and NVDA. At the bottom of the screen are buttons for text size and contrast. To try the demo, go to the section Try it right now."
+  },
+  "part": {
+   "h2": "We are looking for partners",
+   "p": "Associations for the blind and low-vision, clinics, foundations: we are open to pilots.",
+   "btn": "Become a partner",
+   "form": "Offer collaboration",
+   "org": "Organization",
+   "type": "Type of organization",
+   "t1": "Association for the blind and low-vision",
+   "t2": "Clinic",
+   "t3": "Foundation",
+   "t4": "University or lab",
+   "t5": "Other",
+   "offer": "What can you offer?",
+   "o1": "A pilot site",
+   "o2": "Expertise",
+   "o3": "Funding",
+   "msg": "Comment (optional)",
+   "submit": "Send proposal",
+   "eo": "Enter the organization name.",
+   "ok": "Thank you, {n}! We will review your proposal and get in touch."
+  },
+  "vid": {
+   "h2": "Video",
+   "title": "Kozjaryk demo video"
+  },
+  "how": {
+   "h2": "How it works",
+   "note": "A concept animation, not a recording of a real device.",
+   "pause": "Pause",
+   "play": "Play",
+   "steps": "Steps",
+   "s1": "You ask, the pendant looks",
+   "s2": "AI understands the scene",
+   "s3": "A voice answers in your ear",
+   "s4": "The bracelet shows the direction"
+  },
+  "help": {
+   "title": "How to use this site",
+   "k": "Keyboard: Tab and Shift+Tab move between elements, Enter or Space press buttons, Esc closes windows.",
+   "v": "VoiceOver (iPhone): swipe right and left, double-tap to press a button.",
+   "t": "TalkBack (Android): the same, swipe right and left, double-tap to press.",
+   "n": "NVDA and JAWS (Windows): the H key jumps between headings, Tab moves between buttons and fields.",
+   "g": "Or press “Listen to the site guide”: a voice explains how everything works here."
+  },
+  "off": {
+   "sum": "What works offline (plan)",
+   "l": "On the device itself",
+   "l1": "Voice commands",
+   "l2": "Tenge banknote values",
+   "l3": "Obstacles and direction",
+   "l4": "Bus number",
+   "c": "Needs internet",
+   "c1": "Detailed scene description",
+   "c2": "Reading long texts and medicine leaflets",
+   "c3": "Bus arrival time: we plan to connect city transport data"
+  },
+  "st": {
+   "h2": "Testing stories"
+  },
+  "safe": {
+   "h2": "Safety first",
+   "c1": "Not a cane replacement",
+   "c1t": "Kozjaryk helps but does not replace a cane, a guide dog or a companion. On roads and in dangerous places rely on your usual methods.",
+   "c2": "AI admits doubt",
+   "c2t": "We design the system so that when confidence is low it says so instead of guessing. Hazards come before descriptions.",
+   "c3": "The signal will not get lost",
+   "c3t": "Planned: adjustable vibration strength, a distinct pattern for each signal, and important ones repeated by voice.",
+   "c4": "Privacy by default",
+   "c4t": "The camera turns on only on your command, with a light indicator on the case. We plan not to store frames with faces or documents.",
+   "lim": "Known limits",
+   "l1": "Kazakh voice: we will test its quality with native speakers; mistakes are possible for now.",
+   "l2": "City environment: mixed-script signs, worn banknotes, ice. Real-street testing is needed.",
+   "l3": "Battery and weight: the goal is all-day use without heating; the chip and capacity are not chosen yet.",
+   "l4": "Connectivity: we plan urgent hints to run on the device so they do not depend on the network."
+  }
+ }
+}
+</script>
+
+<script>
+(function(){
+"use strict";
+/* ================= CONFIG: fill these in before launch ================= */
+var ENDPOINT="";      /* URL of a Google Apps Script web app / Telegram-bot relay / Formspree. Empty = demo mode (data stays in this browser) */
+var VIDEO_ID="";      /* YouTube video id of the real demo video. Empty = video block stays hidden */
+var CONTACT_EMAIL=""; /* contact for personal-data requests; replaces the placeholder in the privacy policy */
+var STORIES=[];     /* real testing quotes only, e.g. [{q:{ru:"...",kk:"...",en:"..."},who:{ru:"Участник теста, 62 года",kk:"...",en:"..."}}]. Empty = section hidden */
+var OPERATOR="Инициативная группа проекта Kozjaryk, Казахстан"; /* who controls the data. Before collecting real data replace with a registered operator, e.g. "ТОО «…», БИН …", or a named responsible person, and have a lawyer review the policy */
+/* ======================================================================= */
+var I=JSON.parse(document.getElementById("i18n").textContent);
+var L="ru",Q=-1;
+var VOICE={ru:"ru-RU",kk:"kk-KZ",en:"en-US"};
+var DIR=["l","s","r","s","s"],TAGS=[["door","bus"],["sign"],["bus"],["note"],[]];
+function $(i){return document.getElementById(i)}
+function g(path){var o=I[L];path.split(".").forEach(function(k){o=o==null?o:o[k]});return o==null?"":o}
+function sv(k,v){try{localStorage.setItem("kj_"+k,v)}catch(e){}}
+function ld(k){try{return localStorage.getItem("kj_"+k)}catch(e){return null}}
+
+/* ---------- language ---------- */
+function pickLang(){
+  var ls=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||""]).map(function(x){return String(x).toLowerCase().split(/[-_]/)[0]});
+  if(ls.indexOf("kk")>-1)return "kk";
+  for(var i=0;i<ls.length;i++){if(ls[i]==="ru"||ls[i]==="en")return ls[i]}
+  var tz="";try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||""}catch(e){}
+  return /^Asia\/(Almaty|Aqtau|Aqtobe|Atyrau|Oral|Qostanay|Qyzylorda)$/.test(tz)?"ru":"en";
+}
+function setLang(l){
+  L=l;document.documentElement.lang=l;document.title=g("title");
+  document.querySelectorAll("[data-i]").forEach(function(e){e.textContent=g(e.dataset.i)});
+  document.querySelectorAll("[data-ia]").forEach(function(e){e.setAttribute("aria-label",g(e.dataset.ia))});
+  document.querySelectorAll("#langs button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.l===l)});
+  var po=$("polop");po.textContent=OPERATOR?g("pol.op").replace("{op}",OPERATOR):"";po.hidden=!OPERATOR;
+  if(ENDPOINT)$("polp1").textContent=g("pol.p1s");
+  if(CONTACT_EMAIL){var p1=$("polp1");p1.textContent=p1.textContent.replace(/\[[^\]]*email[^\]]*\]/i,CONTACT_EMAIL)}
+  applyZ();renderDemo();hLabel();renderStories();sv("lang",l);
+}
+$("langs").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setLang(b.dataset.l)});
+
+/* ---------- demo ---------- */
+var stage=$("stage"),ans=$("ans"),bst=$("bst"),sp=$("sp");
+function renderDemo(){
+  var segs=document.querySelectorAll(".seg");
+  if(Q<0){
+    $("anst").textContent=g("demo.idle");$("svs").textContent="";bst.textContent=g("demo.bw");
+    segs.forEach(function(s){s.classList.remove("on")});return;
+  }
+  stage.classList.toggle("clear",Q!==4); /* the cautious answer keeps the scene blurred */
+  document.querySelectorAll(".tag").forEach(function(r){r.classList.toggle("on",TAGS[Q].indexOf(r.dataset.k)>-1)});
+  $("anst").textContent=g("demo.a"+(Q+1));$("svs").textContent=g("demo.h"+(Q+1));
+  var d=DIR[Q],label="";
+  segs.forEach(function(s){var on=s.dataset.d===d;s.classList.remove("on");if(on){void s.offsetWidth;s.classList.add("on");label=s.querySelector("span").textContent}});
+  bst.textContent=g("demo.bst")+": "+label;
+}
+$("qs").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  Q=+b.dataset.q;sp.textContent="";
+  this.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed",x===b)});
+  renderDemo();
+  haptic(DIR[Q]);
+});
+
+/* ---------- bracelet feedback: vibration where supported, quiet sound pulses elsewhere (iOS has no Vibration API) ---------- */
+var SGs=ld("sg"),SG=SGs===null?1:Math.min(2,Math.max(0,+SGs||0)),AC=null;
+function haptic(d){
+  var kf=[0.7,1,1.6][SG],pat=(d==="l"?[120,80,120]:d==="r"?[120,80,120,80,120]:[400]).map(function(x){return Math.round(x*kf)});
+  try{if(navigator.vibrate&&navigator.vibrate(pat))return}catch(e){}
+  try{
+    var Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;
+    AC=AC||new Ctx();if(AC.state==="suspended")AC.resume();
+    var pan=AC.createStereoPanner?AC.createStereoPanner():null,dest=pan||AC.destination;
+    if(pan){pan.pan.value=d==="l"?-1:d==="r"?1:0;pan.connect(AC.destination)}
+    var t0=AC.currentTime+.02,at=0;
+    pat.forEach(function(ms,i){
+      if(i%2===0){
+        var s=t0+at/1000,e=s+ms/1000,o=AC.createOscillator(),gn=AC.createGain();
+        o.type="sine";o.frequency.value=170;
+        var gv=.12*[.6,1,1.6][SG];gn.gain.setValueAtTime(0,s);gn.gain.linearRampToValueAtTime(gv,s+.01);gn.gain.setValueAtTime(gv,e-.02);gn.gain.linearRampToValueAtTime(0,e);
+        o.connect(gn);gn.connect(dest);o.start(s);o.stop(e+.02);
+      }
+      at+=ms;
+    });
+  }catch(e){}
+}
+
+/* vibration strength selector (remembered) */
+function applySG(){document.querySelectorAll("[data-sg]").forEach(function(b){b.setAttribute("aria-pressed",+b.dataset.sg===SG?"true":"false")})}
+document.querySelectorAll("[data-sg]").forEach(function(b){b.addEventListener("click",function(){SG=+b.dataset.sg;sv("sg",SG);applySG();haptic(Q>=0?DIR[Q]:"l")})});
+applySG();
+
+/* ---------- speech (voices load asynchronously, esp. Safari/iOS) ---------- */
+var VC=[],haveSpeech="speechSynthesis" in window;
+function loadVoices(){try{VC=speechSynthesis.getVoices()||[]}catch(e){VC=[]}return VC}
+if(haveSpeech){
+  loadVoices();
+  if(speechSynthesis.addEventListener)speechSynthesis.addEventListener("voiceschanged",loadVoices);
+  else speechSynthesis.onvoiceschanged=loadVoices;
+}
+function whenVoices(cb){
+  if(loadVoices().length){cb();return}
+  var done=false,tm;
+  function fin(){if(!done){done=true;clearTimeout(tm);loadVoices();cb()}}
+  tm=setTimeout(fin,2000);
+  if(speechSynthesis.addEventListener)speechSynthesis.addEventListener("voiceschanged",function h(){speechSynthesis.removeEventListener("voiceschanged",h);fin()});
+  else speechSynthesis.onvoiceschanged=fin;
+}
+/* say(): speaks txt in the chosen language; if the device has no voice for it, falls back to the Russian text/voice */
+function say(txt,lang,msgEl,ruTxt){
+  msgEl.textContent="";
+  if(!haveSpeech){msgEl.textContent=g("demo.nosp");return}
+  whenVoices(function(){
+    function find(l){return VC.filter(function(v){return v.lang.toLowerCase().replace("_","-").indexOf(VOICE[l].slice(0,2))===0})}
+    var use=lang,text=txt,mv=find(lang);
+    if(VC.length&&!mv.length&&lang!=="ru"&&ruTxt){var rv=find("ru");if(rv.length){use="ru";text=ruTxt;mv=rv;msgEl.textContent=g("demo.nov2")}}
+    if(VC.length&&!mv.length){msgEl.textContent=g("demo.nov");return}
+    var u=new SpeechSynthesisUtterance(text);u.lang=VOICE[use];
+    try{if(mv.length)u.voice=mv[0]}catch(e){}
+    u.onerror=function(){msgEl.textContent=g("demo.err")};
+    speechSynthesis.cancel();speechSynthesis.speak(u);
+  });
+}
+$("speak").addEventListener("click",function(){
+  sp.textContent="";
+  if(Q<0){sp.textContent=g("demo.ask");return}
+  var k="a"+(Q+1);say(g("demo."+k),L,sp,I.ru.demo[k]);
+});
+$("guide").addEventListener("click",function(){say(g("guide.text"),L,$("gmsg"),I.ru.guide.text)});
+
+/* ---------- accessibility: text size + contrast ---------- */
+var Zs=[1,1.15,1.3],ZL=["A","A+","A++"],zi=+ld("z")||0,zb=$("zm"),hb=$("hc");
+function applyZ(){
+  document.documentElement.style.setProperty("--z",Zs[zi]);
+  zb.textContent=ZL[zi];zb.setAttribute("aria-label",g("a11y.size")+": "+ZL[zi]);
+}
+zb.addEventListener("click",function(){zi=(zi+1)%3;sv("z",zi);applyZ()});
+function applyHC(on){
+  if(on)document.documentElement.setAttribute("data-hc","1");else document.documentElement.removeAttribute("data-hc");
+  hb.setAttribute("aria-pressed",on?"true":"false");
+}
+hb.addEventListener("click",function(){var on=hb.getAttribute("aria-pressed")!=="true";applyHC(on);sv("hc",on?1:0)});
+
+/* the bar fades out near the footer and while the form is in use */
+var bar=$("a11y"),F=$("wl"),fs={f:false,i:false};
+function updBar(){bar.classList.toggle("hide",fs.f||fs.i)}
+if("IntersectionObserver" in window){new IntersectionObserver(function(es){fs.f=es[0].isIntersecting;updBar()}).observe(document.querySelector("footer"))}
+[F,$("pf")].forEach(function(f){
+  f.addEventListener("focusin",function(){fs.i=true;updBar()});
+  f.addEventListener("focusout",function(){setTimeout(function(){fs.i=F.contains(document.activeElement)||$("pf").contains(document.activeElement);updBar()},60)});
+});
+
+/* ---------- modals (privacy policy, site help): focus always returns to the opener ---------- */
+function wireDialog(d,openers,closeBtn){
+  var last=null;
+  function open(o){last=o;if(d.showModal)d.showModal();else d.setAttribute("open","");closeBtn.focus()}
+  function close(){if(d.close)d.close();else{d.removeAttribute("open");if(last)last.focus()}}
+  openers.forEach(function(o){o.addEventListener("click",function(){open(o)})});
+  closeBtn.addEventListener("click",close);
+  d.addEventListener("click",function(e){var r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close()});
+  d.addEventListener("close",function(){if(last)last.focus()});
+}
+wireDialog($("pol"),[$("polb"),$("polb2")],$("polx"));
+wireDialog($("help"),[$("helpb")],$("helpx"));
+
+/* ---------- waitlist form ---------- */
+if(VIDEO_ID){$("vf").src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(VIDEO_ID);$("vid").hidden=false}
+$("partnerbtn").addEventListener("click",function(e){e.preventDefault();var d=$("pdet");d.open=true;d.scrollIntoView({behavior:"smooth",block:"center"});$("pf").org.focus({preventScroll:true})});
+var E=$("err");
+function bad(el,m){el.setAttribute("aria-invalid","true");E.textContent=m;el.focus()}
+F.addEventListener("submit",function(e){
+  e.preventDefault();
+  if(F.website.value)return; /* honeypot: bots fill hidden fields */
+  var nm=F.nm.value.trim(),em=F.em.value.trim();E.textContent="";
+  [F.nm,F.em,F.ag].forEach(function(x){x.removeAttribute("aria-invalid")});
+  if(nm.length<2)return bad(F.nm,g("join.en"));
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em))return bad(F.em,g("join.ee"));
+  if(!F.ag.checked)return bad(F.ag,g("join.ea"));
+  var list=[];try{list=JSON.parse(ld("wl")||"[]")}catch(x){}
+  var rec={n:nm,e:em,r:F.rl.selectedIndex,t:Date.now()};
+  list.push(rec);sv("wl",JSON.stringify(list));
+  function done(msg){F.hidden=true;var o=$("okb");o.hidden=false;o.textContent=msg;o.focus()}
+  if(!ENDPOINT){done(g("join.ok").replace("{n}",nm).replace("{c}",list.length));return}
+  var sb=F.querySelector("button[type=submit]");sb.disabled=true;
+  fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({type:"waitlist",name:nm,email:em,role:F.rl.value,lang:L,ts:rec.t})})
+    .then(function(){done(g("join.ok2").replace("{n}",nm))})
+    .catch(function(){sb.disabled=false;E.textContent=g("join.neterr")});
+});
+
+/* ---------- audio examples: any language, regardless of the site language ---------- */
+document.querySelectorAll("[data-ex]").forEach(function(b){
+  b.addEventListener("click",function(){var l=b.dataset.ex;say(I[l].demo.a1,l,sp,I.ru.demo.a1)});
+});
+
+/* ---------- concept animation (pause control + manual steps, starts paused with reduced motion) ---------- */
+var hbox=$("how-box"),hplay=$("hplay"),hs=0,hOn=!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches),htimer=null;
+function hLabel(){hplay.textContent=g(hOn?"how.pause":"how.play")}
+function setStep(i){hs=i;hbox.dataset.s=i;document.querySelectorAll("#steps4 button").forEach(function(b,k){b.setAttribute("aria-pressed",k===i?"true":"false")})}
+function hRun(){clearInterval(htimer);if(hOn)htimer=setInterval(function(){setStep((hs+1)%4)},2600)}
+hplay.addEventListener("click",function(){hOn=!hOn;hLabel();hRun()});
+$("steps4").addEventListener("click",function(e){var b=e.target.closest("button");if(b){setStep(+b.dataset.st);hRun()}});
+hRun();
+
+/* ---------- testing stories (only real quotes from CONFIG) ---------- */
+function renderStories(){
+  var box=$("quotes");box.textContent="";
+  $("stories").hidden=!STORIES.length;
+  STORIES.forEach(function(x){
+    var b=document.createElement("blockquote"),p=document.createElement("p"),c=document.createElement("cite");
+    p.textContent=(x.q&&(x.q[L]||x.q.ru))||"";c.textContent=(x.who&&(x.who[L]||x.who.ru))||"";
+    b.appendChild(p);b.appendChild(c);box.appendChild(b);
+  });
+}
+
+/* ---------- partner questionnaire ---------- */
+var PF=$("pf"),PE=$("perr");
+function pbad(el,m){el.setAttribute("aria-invalid","true");PE.textContent=m;el.focus()}
+PF.addEventListener("submit",function(e){
+  e.preventDefault();if(PF.website.value)return;PE.textContent="";
+  var org=PF.org.value.trim(),em=PF.pem.value.trim();
+  [PF.org,PF.pem,PF.pag].forEach(function(x){x.removeAttribute("aria-invalid")});
+  if(org.length<2)return pbad(PF.org,g("part.eo"));
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em))return pbad(PF.pem,g("join.ee"));
+  if(!PF.pag.checked)return pbad(PF.pag,g("join.ea"));
+  var offers=[].slice.call(PF.querySelectorAll("input[name=of]:checked")).map(function(x){return x.value});
+  var rec={type:"partner",org:org,orgType:PF.ot.value,offers:offers,email:em,message:PF.pm.value.trim(),lang:L,ts:Date.now()};
+  var list=[];try{list=JSON.parse(ld("pl")||"[]")}catch(x){}
+  list.push(rec);sv("pl",JSON.stringify(list));
+  function done(){PF.hidden=true;var o=$("pok");o.hidden=false;o.textContent=g("part.ok").replace("{n}",org);o.focus()}
+  if(!ENDPOINT){done();return}
+  var sb=PF.querySelector("button[type=submit]");sb.disabled=true;
+  fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(rec)})
+    .then(done).catch(function(){sb.disabled=false;PE.textContent=g("join.neterr")});
+});
+
+/* ---------- orb: gentle 3D tilt ---------- */
+var orb=$("orb"),calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!calm){
+  window.addEventListener("pointermove",function(e){
+    var x=(e.clientX/window.innerWidth-.5),y=(e.clientY/window.innerHeight-.5);
+    orb.style.setProperty("--ry",(x*18)+"deg");orb.style.setProperty("--rx",(-y*14)+"deg");
+  },{passive:true});
+}
+
+/* ---------- init ---------- */
+applyHC(ld("hc")==="1");
+setLang(ld("lang")||pickLang());
+})();
+</script>
+</body>
+</html>
